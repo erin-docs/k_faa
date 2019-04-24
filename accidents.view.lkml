@@ -181,6 +181,40 @@ view: accidents {
     sql: ${TABLE}.weather_condition ;;
   }
 
+  parameter: fatality_ranges  {
+    type: string
+    allowed_value: {
+      label: "Fewer than 5"
+      value: "< 5"
+    }
+    allowed_value: {
+      label: "Fewer than 100"
+      value: "< 100"
+    }
+    allowed_value: {
+      label: "More than 100"
+      value: "> 100"
+    }
+  }
+
+  measure: accidents_in_fatality_range {
+    label_from_parameter: fatality_ranges
+    type:  sum
+    drill_fields: [air_carrier, accident_number]
+    sql:
+      CASE
+        WHEN {% parameter fatality_ranges %} = '< 5' THEN
+          ${number_of_fatalities} < 5
+        WHEN {% parameter fatality_ranges %} = '< 100' THEN
+          ${number_of_fatalities} < 100
+        WHEN {% parameter fatality_ranges %} = '> 100' THEN
+          ${number_of_fatalities} > 100
+        ELSE
+          NULL
+        END
+    ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [id, airport_name]
