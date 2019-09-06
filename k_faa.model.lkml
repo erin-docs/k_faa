@@ -66,3 +66,7 @@ explore: ontime {}
 explore: states {}
 
 explore: zipcodes {}
+
+named_value_format: int_horses {
+  value_format: "0 \" Horses\""
+}
