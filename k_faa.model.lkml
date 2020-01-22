@@ -2,6 +2,7 @@ connection: "faa"
 
 # include all the views
 include: "*.view"
+include: "Waterfall_Dashboard.dashboard.lookml"
 
 datagroup: k_faa_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;

@@ -2,8 +2,8 @@
   title: Waterfall Dashboard
   layout: newspaper
   elements:
-  - name: 6.12 - 4 measure, no dim waterfall
-    title: 6.12 - 4 measure, no dim waterfall
+  - name: Look-linked waterfall
+    title: Look-linked waterfall
     model: k_faa
     explore: aircraft_types
     type: looker_waterfall
@@ -60,6 +60,7 @@
     down_color: "#8D7FB9"
     total_color: "#EA8A2F"
     show_value_labels: true
+    label_color: [black, red, green]
     show_x_axis_ticks: true
     show_x_axis_label: true
     x_axis_scale: auto
@@ -76,8 +77,12 @@
     col: 8
     width: 8
     height: 6
-  - name: add_a_unique_name_1579025795
-    title: Untitled Visualization
+  - name: hidden_series_test
+    title: Mixed Series Chart
+    note:
+      text: I added this so I could test out the hidden_series param vs hidden_field. Also, I'm testing out the alternate/old note syntax.
+      state: expanded
+      display: hover
     model: thelook
     explore: order_items
     type: looker_bar
@@ -112,7 +117,7 @@
       show_hide: hide
       first_last: last
       num_rows: '4'
-    hidden_series: [Dresses - order_items.count]
+    hidden_fields: [order_items.shipped_date]
     hide_legend: false
     legend_position: center
     colors: ["#64518A", "#8D7FB9", "#EA8A2F", "#F2B431", "#20A5DE", "#57BEBE", "#7F7977",
@@ -132,11 +137,120 @@
     ordering: none
     show_null_labels: false
     show_totals_labels: false
-    show_silhouette: true
+    #show_silhouette: true
     totals_color: "#808080"
     show_null_points: true
     interpolation: linear
     show_dropoff: false
     hidden_fields: []
-
-
+  - name: 2_measure_waterfall
+    title: 2 Measure Waterfall
+    model: thelook
+    explore: order_items
+    type: looker_waterfall
+    fields: [products.category_count, products.department_count]
+    limit: 500
+    column_limit: 50
+    series_types: {}
+    up_color: "#3EB0D5"
+    down_color: "#8D7FB9"
+    total_color: "#EA8A2F"
+    hide_legend: true
+    x_axis_scale: ordinal
+    show_x_axis_label: true
+    x_axis_label: "Cool Stuff"
+  - name: waterfall_w_time_scale
+    title: Time Scale Waterfall
+    model: thelook
+    explore: order_items
+    type: looker_waterfall
+    fields: [order_items.shipped_date, order_items.count]
+    fill_fields: [order_items.shipped_date]
+    filters:
+      order_items.shipped_date: 2020/01/02 for 5 days
+    sorts: [order_items.shipped_date desc]
+    column_limit: 50
+    up_color: green
+    down_color: "#8D7FB9"
+    total_color: "#EA8A2F"
+    show_value_labels: true
+    label_color: [black, red, green]
+    font_size: 20px
+    show_x_axis_ticks: true
+    show_x_axis_label: true
+    x_axis_label: This
+    x_axis_gridlines: true
+    x_axis_label_rotation: 90
+    x_axis_scale: time
+    show_y_axis_labels: false
+    show_y_axis_ticks: true
+    y_axis_gridlines: true
+  - name: testing_color_application
+    title: Color Application set to Third Color Collection
+    model: thelook
+    explore: order_items
+    type: looker_waterfall
+    fields: [order_items.shipped_date, order_items.count]
+    fill_fields: [order_items.shipped_date]
+    filters:
+      order_items.shipped_date: 2020/01/02 for 5 days
+    sorts: [order_items.shipped_date desc]
+    column_limit: 50
+    color_application:
+      collection_id: third-color-collection
+      palette_id: third-color-collection-categorical-0
+      options:
+        steps: 2
+    up_color: #8D7FB9
+    down_color:
+    total_color:
+    show_value_labels: false
+    show_x_axis_ticks: true
+    x_axis_scale: ordinal
+    show_y_axis_labels: false
+    show_y_axis_ticks: false
+    y_axis_gridlines: false
+  - name: MR Tile
+    title: MR Tile
+    merged_queries:
+    - explore: company
+      model: market_research
+      fields: [company.name, company.twitter_username, ipo.public_year, ipo.stock_symbol]
+      filters:
+        company.twitter_username: "-NULL"
+        ipo.valuation_amount: NOT NULL
+      sorts: [ipo.public_year desc]
+      #limit: 500
+      #column_limit: 50
+      #query_timezone: America/Los_Angeles
+      #hidden_fields: []
+      #y_axes: []
+    - model: crunchbase
+      explore: companies
+      type: table
+      fields: [companies.name, ipo.stock_symbol, companies.twitter_username, companies.number_of_employees,
+        jobs.job_count]
+      filters:
+        ipo.stock_symbol: "-NULL"
+        companies.number_of_employees: NOT NULL
+        companies.twitter_username: "-NULL"
+      sorts: [jobs.job_count desc]
+      #limit: 500
+      #column_limit: 50
+      #query_timezone: America/Los_Angeles
+      #hidden_fields: []
+      #y_axes: []
+      join_fields:
+      - field_name: ipo.stock_symbol
+        source_field_name: ipo.stock_symbol
+      - field_name: companies.name
+        source_field_name: company.name
+      - field_name: companies.twitter_username
+        source_field_name: company.twitter_username
+    #hidden_fields: [ipo.stock_symbol, companies.twitter_username, companies.number_of_employees, ipo.public_year, company.twitter_username]
+    type: looker_grid
+    series_types: {}
+    row: 0
+    col: 16
+    width: 8
+    height: 6
