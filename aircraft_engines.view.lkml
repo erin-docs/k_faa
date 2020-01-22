@@ -19,6 +19,7 @@ view: aircraft_engines {
 
   dimension: horsepower {
     type: number
+    value_format_name: int_horses
     sql: ${TABLE}.horsepower ;;
   }
 
@@ -34,6 +35,7 @@ view: aircraft_engines {
 
   dimension: thrust {
     type: number
+    value_format_name: decimal_3
     sql: ${TABLE}.thrust ;;
   }
 
